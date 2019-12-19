@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="2ed08797-8202-44a1-8da5-677696b166cf" name="localhost" url="http://localhost/scopic">
+        <fileTransfer port="0" mountedRoot="C:\Apache24\htdocs\scopic" accessType="MOUNT" />
+      </webServer>
+      <webServer id="dbcbc833-88d1-48bb-958c-ab0367097e74" name="AWS Tokyo Notborder" url="http://notborder.org/scopic">
+        <fileTransfer host="notborder.org" port="22" privateKey="C:\Users\matthew\.ssh\matt_linux2.ppk" rootFolder="/var/www/html/scopic" accessType="SFTP" username="ec2-user" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

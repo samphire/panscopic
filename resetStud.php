@@ -1,12 +1,7 @@
 <?php
-error_reporting(1);
-if (!isset($_SESSION)) {
-session_start();
-}
-global $conn;
-$conn = mysqli_connect("localhost", "root", "canal", "panscopic") or die('Error connecting to mysql');
-mysqli_query($conn, "SET NAMES utf8");
-mysqli_query($conn, "SET CHARACTER SET utf8");
+
+include("sessionheader.inc");
+
 $sql = "DELETE FROM tbl_stud_testscore WHERE fld_student_id = '". $_GET['stud'] . "' AND fld_test_id = " . $_GET['test'];
 $query = mysqli_query($conn, $sql);
 
