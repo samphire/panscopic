@@ -67,7 +67,7 @@ include("pageheader.inc");
             margin-bottom: 3rem;
             color: #EAEDDA;
             color: orangered;
-            background-color: rgba(66,66,66,0.5);
+            background-color: rgba(66, 66, 66, 0.5);
             position: fixed;
             bottom: 0;
             right: 15%;
@@ -136,6 +136,27 @@ include("pageheader.inc");
             font-weight: bolder;
         }
 
+        .audioBtnDiv {
+            text-align: right;
+        }
+
+        img.audioBtn {
+            right: 0;
+            width: 4rem;
+            -webkit-transition-duration: 0.2s; /* Safari */
+            transition-duration: 0.2s;
+        }
+
+        img.audioBtn:hover {
+            cursor: pointer;
+            transform: scale(1.1, 1.1);
+        / / box-shadow: 0 12 px 16 px 0 rgba(0, 0, 0, 0.24), 0 17 px 50 px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        img.audioBtn:active {
+            transform: translateY(2px);
+        }
+
         @media screen and (min-width: 768px) {
             .widg {
                 transform: scale(0.6, 0.6);
@@ -166,6 +187,14 @@ include("pageheader.inc");
             img.dropshadow {
                 width: 90%;
             }
+
+            img.audioBtn {
+                width: 2rem;
+            }
+
+            .audioBtnDiv {
+                text-align: left;
+            }
         }
 
     </style>
@@ -188,6 +217,9 @@ include("pageheader.inc");
             }
         }
     </script>
+
+
+    <script src="js/howler.core.min.js"></script>
 
     </head>
     <body>
@@ -228,7 +260,7 @@ list(, $_SESSION['desc'], $_SESSION['course'], , , , $_SESSION['end'], $_SESSION
     $_SESSION['panswer'], $_SESSION['oneshot'], $_SESSION['ppraccy'], $_SESSION['retain'], $_SESSION['timer'],
     $_SESSION['qnstable']) = mysqli_fetch_row($query);
 
-if($_SESSION['qnstable'] == NULL){
+if ($_SESSION['qnstable'] == NULL) {
     die("There are no questions for this test");
 }
 
@@ -335,7 +367,7 @@ if ($_SESSION['shuffle'] == -1) {
 
 //Print Questions on Page
 foreach ($queshy as $val => $wow) {
-    $qnumdisplay = $val + 1; //prints from 'question 1' even when retain correct
+//    $qnumdisplay = $val + 1; //prints from 'question 1' even when retain correct
     $qnumdisplay = $queshy[$val]['qnum']; //prints the actual question number in the test data
     $lenput = strlen($queshy[$val]['answer']) + 0;
 
@@ -343,13 +375,19 @@ foreach ($queshy as $val => $wow) {
         print "\n<span class='rubrik'>" . $queshy[$val]['rubrik'] . "</span><hr>";
     }
 
-    if ($queshy[$val]['image'] <> "" & $queshy[$val-1]['image'] != $queshy[$val]['image']) {
+    if ($queshy[$val]['image'] <> "" & $queshy[$val - 1]['image'] != $queshy[$val]['image']) { // Don't print the same image twice!
         print "\n\n\n<img src='" . $_SESSION['global_url'] .
             "/images/" . $queshy[$val]['image'] . "' align='center' class='dropshadow' alt='img'>";
     }
 
-    if ($queshy[$val]['audio'] <> "") {
-        print "\n\n\n<input type='button' name='bob3' value='play' OnClick='Player.url=" . chr(34) . "media/audio/" . $queshy[$val]['audio'] . chr(34) . "; Player.controls.play();'>";
+    if ($queshy[$val]['audio'] <> "" & $queshy[$val - 1]['audio'] != $queshy[$val]['audio']) {
+        print "<script>var sound" . $val . " = new Howl({ src: ['media/audio/" . $queshy[$val]['audio'] . "'], preload: true});</script>";
+//        print "\n\n<input type='button' name='bob3' value='play' OnClick='sound".$val.".play();'>";
+        print "\n\n\n<div class='audioBtnDiv'>
+        <img class='audioBtn' src='img/audioplay.png' onclick='sound" . $val . ".play();'>
+        <img class='audioBtn' src='img/audiopause.png' onclick='sound" . $val . ".pause();'>
+        <img class='audioBtn' src='img/audiostop.png' onclick='sound" . $val . ".stop();'>
+        </div>";
     }
 
     if ($queshy[$val]['video'] <> "") {
@@ -412,24 +450,64 @@ foreach ($queshy as $val => $wow) {
                 print "\n<span class='question'>\nQ" . $qnumdisplay . "</span>&nbsp;&nbsp;&nbsp;&nbsp;" . $queshy[$val]['txt1'];
             }
 
-            $izzy = "\n<br><br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "a' value=" . chr(34) . $queshy[$val]['txt2'] . chr(34) . ($done ? ($queshy[$val]['txt2'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "a'>" . baitchtmlentities($queshy[$val]['txt2']) . "</label>";
-            $izzy .= "\n<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "b' value=" . chr(34) . $queshy[$val]['txt3'] . chr(34) . ($done ? ($queshy[$val]['txt3'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "b'>" . baitchtmlentities($queshy[$val]['txt3']) . "</label>";
+//            $izzy = "\n<br><br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "a' value=" . chr(34) . $queshy[$val]['txt2'] . chr(34) . ($done ? ($queshy[$val]['txt2'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "a'>" . baitchtmlentities($queshy[$val]['txt2']) . "</label>";
+//            $izzy .= "\n<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "b' value=" . chr(34) . $queshy[$val]['txt3'] . chr(34) . ($done ? ($queshy[$val]['txt3'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "b'>" . baitchtmlentities($queshy[$val]['txt3']) . "</label>";
 
+            if ($queshy[$val]['txt2'][0] == '~') {
+                print "<script>var sound" . $queshy[$val]['qnum'] . "a = new Howl({ src: ['media/audio/" . $queshy[$val]['txt2'] . "'], preload: true});</script>";
+                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "a' value=" . chr(34) . $queshy[$val]['txt2'] . chr(34) . ($done ? ($queshy[$val]['txt2'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<img class='audioBtn' src='img/audioplay.png' onclick='sound" . $queshy[$val]['qnum'] . "a.stop();sound" . $queshy[$val]['qnum'] . "a.play();'>";
+            } else {
+                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "a' value=" . chr(34) . $queshy[$val]['txt2'] . chr(34) . ($done ? ($queshy[$val]['txt2'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "a'>" . baitchtmlentities($queshy[$val]['txt2']) . "</label>";
+            }
+        
+        
+            if ($queshy[$val]['txt3'][0] == '~') {
+                print "<script>var sound" . $queshy[$val]['qnum'] . "b = new Howl({ src: ['media/audio/" . $queshy[$val]['txt3'] . "'], preload: true});</script>";
+                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "b' value=" . chr(34) . $queshy[$val]['txt3'] . chr(34) . ($done ? ($queshy[$val]['txt3'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<img class='audioBtn' src='img/audioplay.png' onclick='sound" . $queshy[$val]['qnum'] . "b.stop();sound" . $queshy[$val]['qnum'] . "b.play();'>";
+            } else {
+                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "b' value=" . chr(34) . $queshy[$val]['txt3'] . chr(34) . ($done ? ($queshy[$val]['txt3'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "b'>" . baitchtmlentities($queshy[$val]['txt3']) . "</label>";
+            }
+        
+        
             if ($queshy[$val]['txt4'] <> "") {
-                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "c' value=" . chr(34) . $queshy[$val]['txt4'] . chr(34) . ($done ? ($queshy[$val]['txt4'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "c'>" . baitchtmlentities($queshy[$val]['txt4']) . "</label>";
+//                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "c' value=" . chr(34) . $queshy[$val]['txt4'] . chr(34) . ($done ? ($queshy[$val]['txt4'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "c'>" . baitchtmlentities($queshy[$val]['txt4']) . "</label>";
+                if ($queshy[$val]['txt4'][0] == '~') {
+                    print "<script>var sound" . $queshy[$val]['qnum'] . "c = new Howl({ src: ['media/audio/" . $queshy[$val]['txt4'] . "'], preload: true});</script>";
+                    $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "c' value=" . chr(34) . $queshy[$val]['txt4'] . chr(34) . ($done ? ($queshy[$val]['txt4'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<img class='audioBtn' src='img/audioplay.png' onclick='sound" . $queshy[$val]['qnum'] . "c.stop();sound" . $queshy[$val]['qnum'] . "c.play();'>";
+                } else {
+                    $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "c' value=" . chr(34) . $queshy[$val]['txt4'] . chr(34) . ($done ? ($queshy[$val]['txt4'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "c'>" . baitchtmlentities($queshy[$val]['txt4']) . "</label>";
+                }
             }
             if ($queshy[$val]['txt5'] <> "") {
-                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "d' value=" . chr(34) . $queshy[$val]['txt5'] . chr(34) . ($done ? ($queshy[$val]['txt5'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "d'>" . baitchtmlentities($queshy[$val]['txt5']) . "</label>";
+//                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "d' value=" . chr(34) . $queshy[$val]['txt5'] . chr(34) . ($done ? ($queshy[$val]['txt5'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "d'>" . baitchtmlentities($queshy[$val]['txt5']) . "</label>";
+                if ($queshy[$val]['txt5'][0] == '~') {
+                    print "<script>var sound" . $queshy[$val]['qnum'] . "d = new Howl({ src: ['media/audio/" . $queshy[$val]['txt5'] . "'], preload: true});</script>";
+                    $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "d' value=" . chr(34) . $queshy[$val]['txt5'] . chr(34) . ($done ? ($queshy[$val]['txt5'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<img class='audioBtn' src='img/audioplay.png' onclick='sound" . $queshy[$val]['qnum'] . "d.stop();sound" . $queshy[$val]['qnum'] . "d.play();'>";
+                } else {
+                    $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "d' value=" . chr(34) . $queshy[$val]['txt5'] . chr(34) . ($done ? ($queshy[$val]['txt5'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "d'>" . baitchtmlentities($queshy[$val]['txt5']) . "</label>";
+                }
             }
             if ($queshy[$val]['txt6'] <> "") {
-                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "e' value=" . chr(34) . $queshy[$val]['txt6'] . chr(34) . ($done ? ($queshy[$val]['txt6'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "e'>" . baitchtmlentities($queshy[$val]['txt6']) . "</label>";
+//                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "e' value=" . chr(34) . $queshy[$val]['txt6'] . chr(34) . ($done ? ($queshy[$val]['txt6'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "e'>" . baitchtmlentities($queshy[$val]['txt6']) . "</label>";
+
+                if ($queshy[$val]['txt6'][0] == '~') {
+                    print "<script>var sound" . $queshy[$val]['qnum'] . "e = new Howl({ src: ['media/audio/" . $queshy[$val]['txt6'] . "'], preload: true});</script>";
+                    $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "e' value=" . chr(34) . $queshy[$val]['txt6'] . chr(34) . ($done ? ($queshy[$val]['txt6'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<img class='audioBtn' src='img/audioplay.png' onclick='sound" . $queshy[$val]['qnum'] . "e.stop();sound" . $queshy[$val]['qnum'] . "e.play();'>";
+                } else {
+                    $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "e' value=" . chr(34) . $queshy[$val]['txt6'] . chr(34) . ($done ? ($queshy[$val]['txt6'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "e'>" . baitchtmlentities($queshy[$val]['txt6']) . "</label>";
+                }
             }
             if ($queshy[$val]['txt7'] <> "") {
-                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "f' value=" . chr(34) . $queshy[$val]['txt7'] . chr(34) . ($done ? ($queshy[$val]['txt7'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "f'>" . baitchtmlentities($queshy[$val]['txt7']) . "</label>";
+                if ($queshy[$val]['txt7'][0] == '~') {
+                    print "<script>var sound" . $queshy[$val]['qnum'] . "f = new Howl({ src: ['media/audio/" . $queshy[$val]['txt7'] . "'], preload: true});</script>";
+                    $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "f' value=" . chr(34) . $queshy[$val]['txt7'] . chr(34) . ($done ? ($queshy[$val]['txt7'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<img class='audioBtn' src='img/audioplay.png' onclick='sound" . $queshy[$val]['qnum'] . "f.stop();sound" . $queshy[$val]['qnum'] . "f.play();'>";
+                } else {
+                    $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "f' value=" . chr(34) . $queshy[$val]['txt7'] . chr(34) . ($done ? ($queshy[$val]['txt7'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "f'>" . baitchtmlentities($queshy[$val]['txt7']) . "</label>";
+                }
             }
 
             print $izzy;
-            print"</div>";
+            print "</div>";
             break;
 
 
