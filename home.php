@@ -1,12 +1,6 @@
-<?php
-/**
- * Created by IntelliJ IDEA.
- * User: matthew
- * Date: 2/18/2016
- * Time: 9:45 AM
- */
-
+<?php session_start();
 include("sessionheader.inc");
+include("pageheader.inc");
 
 function convert_datetime($str)
 {
@@ -20,7 +14,7 @@ function convert_datetime($str)
 ?>
     <style>
         body {
-            background-color: white;
+            background-color: #ECDFCD;
             font-size: x-large;
             font-family: 'ubunturegular', Arial, sans-serif;
         }
@@ -30,7 +24,7 @@ function convert_datetime($str)
             margin: 0 auto;
             border: 1px solid black;
             border-radius: 5px;
-            background-color: azure;
+            background-color: #54B77E;
             padding: 2%;
             text-align: center;
         }
@@ -47,12 +41,14 @@ function convert_datetime($str)
 
         .testChoice {
             border-radius: 5px;
-            background-color: #333333;
+            /*background-color: #333333;*/
+            background-color: #6AD9D9;
             padding: 2%;
             width: 90%;
             margin: 0 auto;
             margin-top: 30px;
-            color: greenyellow;
+            /*color: greenyellow;*/
+            color: black;
             cursor: pointer;
         }
 
@@ -91,7 +87,12 @@ function convert_datetime($str)
     </script>
 
 <?php
-print   "\n</head>\n<body>";
+print   "\n</head>\n<body>";?>
+
+<header style="text-align: center;">
+    <img src="img/bitmap.png" width="200px">
+</header>
+<?php
 print "\n<img id='reset' src='img/unlock.png' style='position: fixed;top: 0px; left: 0px;width: 48px; height: 48px;'>";
 //print "<img id=\"reset\" src=\"../img/reset.png\" onclick='reset();'>";
 print "\n<div class='header'><h2>" . $_SESSION['coursedesc'] . "</h2></div>";
@@ -101,10 +102,11 @@ $sql = "SELECT * FROM tbl_stud_class JOIN tbl_classes
 ON tbl_stud_class.fld_class_id=tbl_classes.fld_class_id
 WHERE tbl_stud_class.fld_student_id='" . $_SESSION['studid'] . "'";
 //echo "<br>$sql<br>";
+mail("matt@notborder.org","My subject",$sql);
 $query = mysqli_query($conn, $sql);
 
 
-while (list($stud, $class) = mysqli_fetch_row($query)) {
+while (list($stud, $class,,$classdesc) = mysqli_fetch_row($query)) {
 //Get actual scores for this student
     $sql = "SELECT bob.fld_test_id, bob.fld_desc, bob.fld_retain, bob.fld_startdate, bob.fld_enddate, susan.fld_score
 FROM (SELECT tbl_tests.fld_test_id, tbl_tests.fld_desc, tbl_tests.fld_retain,tbl_class_tests.fld_startdate, tbl_class_tests.fld_enddate
@@ -114,18 +116,59 @@ WHERE tbl_class_tests.fld_classid=" . $class . ") AS bob
 LEFT JOIN (SELECT fld_test_id, fld_score FROM tbl_stud_testscore WHERE fld_student_id='" . $_SESSION['studid'] . "') AS susan
 ON bob.fld_test_id = susan.fld_test_id
 ORDER BY bob.fld_test_id";
-//    echo "<br>$sql<br>";
-    $query2 = mysqli_query($conn, $sql) or die('something wrong');
+    //echo "<br>query2<br>$sql<br>";
+    $query2 = mysqli_query($conn, $sql) or die('something wrong   '.$sql);
     $numStars = mysqli_num_rows($query2);
     $width = floor(100 / $numStars);
     $starSize = round(14 / $numStars, 1);
     if ($starSize > 4) $starSize = 4;
-    print "\n<div id=\"stars\">";
+    print "\n<div id=\"stars\"><div class=\"starsClassTitle\">".$classdesc." class</div>";
 
-    $tests = array();
+    $tests = array(); // array to hold all of the tests to display
 
 
     while (list ($testid, $testdesc, $testRetain, $start, $end, $score) = mysqli_fetch_row($query2)) {
+        // manage tests that have no score yet
+        if($score == NULL){
+        // echo "There is no score yet for test id $testid, $testdesc";
+        $test = array();
+                array_push($test, $testid);
+                array_push($test, $testdesc);
+                array_push($test, $score);
+                array_push($test, convert_datetime($start));
+                array_push($test, convert_datetime($end));
+                array_push($test, $testRetain);
+
+                array_push($tests, $test);
+                continue;
+        }
+
+
+
+        // Get rank for test
+        $sql = "SELECT rank
+        FROM (SELECT tbl_stud_class.fld_student_id AS stud, fld_score, RANK() OVER(ORDER BY fld_score DESC) rank
+        FROM tbl_stud_testscore INNER JOIN tbl_stud_class ON tbl_stud_testscore.fld_student_id = tbl_stud_class.fld_student_id
+        WHERE tbl_stud_testscore.fld_test_id=". $testid ." AND tbl_stud_class.fld_class_id=". $class .") AS ranks
+        WHERE stud = '".$stud."'";
+//echo "<br>queryRank<br>$sql<br>";
+        $queryRank = mysqli_query($conn, $sql) or die('something wrong with rank query\n'.$sql);
+        list ($rank) = mysqli_fetch_row($queryRank);
+
+        // Get max, min, avg and median for test
+        $sql = "SELECT
+        Min(tbl_stud_testscore.fld_score) AS 최소,
+        Max(tbl_stud_testscore.fld_score) AS 최대,
+        Round((Avg(fld_score)),1) AS 평균,
+        Count(tbl_stud_testscore.fld_score) AS 수
+        FROM tbl_stud_testscore INNER JOIN tbl_stud_class ON tbl_stud_testscore.fld_student_id = tbl_stud_class.fld_student_id
+        GROUP BY tbl_stud_testscore.fld_test_id, tbl_stud_class.fld_class_id
+        HAVING (((tbl_stud_testscore.fld_test_id)=". $testid .") AND ((tbl_stud_class.fld_class_id)=". $class ."))";
+//echo "<br>queryAggregates<br>$sql<br>";
+        $queryAggregates = mysqli_query($conn, $sql) or die('something wrong with aggregate query\n'.$sql);
+
+        while (list ($min, $max, $avg, $count) = mysqli_fetch_row($queryAggregates)){
+
         $test = array();
         array_push($test, $testid);
         array_push($test, $testdesc);
@@ -133,13 +176,27 @@ ORDER BY bob.fld_test_id";
         array_push($test, convert_datetime($start));
         array_push($test, convert_datetime($end));
         array_push($test, $testRetain);
+
         array_push($tests, $test);
 
         if ($score == 100) {
-            print "\n<div class=\"stardiv\" style=\"width: $width%;font-size: " . $starSize . "em;\">&#x2605;<div style=\"font-size: 1rem;\">$testdesc</div></div>";
+            print "\n<div class=\"stardiv\" style=\"width: $width%;font-size: " . $starSize . "em;\">&#x2605;<div style=\"font-size: 1rem;\">$testdesc
+            <br>최소: ".$min."%
+            <br>최대: ".$max."%
+            <br>평균: ".$avg."%
+            <br>수: ".$count."
+            <br>순위: ".$rank."
+            </div></div>";
         } else {
-            print"\n<div class=\"stardiv\" style=\"width: $width%;font-size: " . $starSize . "em;\">&#x2606;<div style=\"font-size: 1rem;\">$testdesc</div></div>";
+            print"\n<div class=\"stardiv\" style=\"width: $width%;font-size: " . $starSize . "em;\">&#x2606;<div style=\"font-size: 1rem;\">$testdesc
+            <br>최소: ".$min."%
+            <br>최대: ".$max."%
+            <br>평균: ".$avg."%
+            <br>수: ".$count."
+            <br>순위: ".$rank."
+            </div></div>";
         }
+    }
     }
     print "\n<div style=\"clear: both\"></div>\n</div>";
 

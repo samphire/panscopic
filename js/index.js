@@ -33,7 +33,8 @@ function headForHome() {
     //set session variables in ajax
     var resp = ajaxCall("GET", "login.php?courseid=" + courseid + "&coursedesc=" + coursedesc + "&studentid=" + studentid, false);
     console.log(resp);
-    window.location = "home.php";
+    // window.location = "home.php";
+    window.location = "welcome.php";
 }
 
 function handleEnter(e) {

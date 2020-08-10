@@ -13,7 +13,7 @@ $query = mysqli_query($conn, $sql);
 <link rel="stylesheet" href="css/spinner.css">
 <style>
     body {
-        background-color: white;
+        background-color: #ECDFCD;
         font-size: x-large;
         font-family: 'ubunturegular', Arial, sans-serif;
     }
@@ -27,10 +27,10 @@ $query = mysqli_query($conn, $sql);
         padding: 5%;
     }
     #setStudent{
-        top: 10%;
+        /*top: 10%;*/
     }
     #setCourse{
-        top: 10%;
+        /*top: 10%;*/
     }
 
     .inner {
@@ -45,6 +45,8 @@ $query = mysqli_query($conn, $sql);
 
     .on {
         display: block;
+        float;
+        clear: both;
     }
 
     .off {
@@ -61,19 +63,29 @@ $query = mysqli_query($conn, $sql);
 
     .selectCourse {
         border-radius: 5px;
-        background-color: #333333;
+        /*background-color: #333333;*/
+        background-color: #54B77E;
         padding: 2%;
         width: 96%;
         margin: 0 auto;
         margin-top: 30px;
-        color: greenyellow;
+        /*color: greenyellow;*/
+        color: darkblue;
         cursor: pointer;
     }
+    header:after{
+        content: " ";
+        display: block;
+        clear: both;
+    }
 </style>
-<script src="js/index.js?version=10"></script>
+<script src="js/index.js?version=11"></script>
 </head>
 
 <body>
+<header style="text-align: center;">
+    <img src="img/bitmap.png" width="200px">
+</header>
 <div id="setCourse" class="on">
     <div class="inner">
         <h2>Select Course</h2>
