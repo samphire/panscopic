@@ -7,8 +7,8 @@ include("pageheader.inc");
     html{
         width: 100%;
         height: 100%;
-        padding 0;
-        margin 0;
+        padding: 0;
+        margin: 0;
     }
     body {
         background-color: #ECDFCD;
@@ -63,8 +63,7 @@ include("pageheader.inc");
 <?php
 print "<div id='greeting'>Hello " . $_SESSION['studname'] . "<br>What would you like to do?</div>";
 ?>
-<div class="testChoice">Watch a video</div>
-<div class="testChoice" onclick="window.location='voxcab.php'">Learn some words</div>
-<div class="testChoice" onclick="window.location='earnpoints.php'">Earn some points</div>
+<div class="testChoice" onclick="window.location='voxcabtest.php'">Vocabulary Test</div>
+<div class="testChoice" onclick="window.location='home.php'">Regular Tests</div>
 <footer>&copysr; Alex English 2020</footer>
 </body></html>

@@ -9,6 +9,7 @@ html, body, svg {
 
 #container {
     display: block;
+    position: relative;
 }
 
 @media only screen and (orientation: portrait) {
@@ -18,8 +19,10 @@ html, body, svg {
         /*-moz-transform: rotate(90deg);*/
         /*-o-transform: rotate(90deg);*/
         /*-ms-transform: rotate(90deg);*/
-        transform: rotate(90deg);
-        /*transform-origin: top left;*/
+        transition: left 2s;
+        transform-origin: top left;
+        transform: translate(100vw, 0) rotate(90deg);
+        /*transform: translate(10vw, 0);*/
         height: 100vw;
         width: 100vh;
         /*align-content: center;*/
@@ -28,8 +31,8 @@ html, body, svg {
         height: 100vw;
         width: 100vh;
         position: absolute;
-        top: 50vw;
-        left: 30vh;
+        /*top: 50vw;*/
+        /*left: 30vh;*/
     }
 }
 
@@ -69,6 +72,20 @@ html, body, svg {
     However, delay the fade out process for 2.5 seconds */
     -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
     animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+#start_button{
+    visibility: visible;
+    font-size: 6rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#start_button.hide{
+    visibility: hidden;
+    animation: fadeout 0.5s 2.5s;
 }
 
 /* Animations to fade the snackbar in and out */
