@@ -37,19 +37,12 @@ list($imgName, $svgData, $voiceId, $id) = mysqli_fetch_row($query);
     ?>
 </div>
 
-<div id="snackbar">some text</div>
+<div id="snackbar" class="toast">some text</div>
 
 <audio preload id="bob">
     <source src="audio/blanket.wav" type="audio/wav">
 </audio>
 
-<script>
-
-
-    // window.onload = function(){
-    //     showToast();
-    // };
-</script>
 <?php
 print "<input id='id' type='hidden' value='".$id."'>";
 ?>

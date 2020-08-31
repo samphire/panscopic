@@ -52,6 +52,8 @@ print "<input id='time' type='hidden' value='".$time."'>";
 print "<input id='numPerfect' type='hidden' value='".$numPerfect."'>";
 ?>
 
+<div id="testSnackbar"  class="toast">some text</div>
+
 </body>
 </html>
 

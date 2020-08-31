@@ -50,7 +50,7 @@ html, body, svg {
 }
 
 /* The snackbar - position it at the bottom and in the middle of the screen */
-#snackbar {
+.toast {
     visibility: hidden; /* Hidden by default. Visible on click */
     min-width: 250px; /* Set a default minimum width */
     margin-left: -125px; /* Divide value of min-width by 2 */
@@ -66,7 +66,7 @@ html, body, svg {
 }
 
 /* Show the snackbar when clicking on a button (class added with JavaScript) */
-#snackbar.show {
+.toast.show, .toast.show {
     visibility: visible; /* Show the snackbar */
     /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
     However, delay the fade out process for 2.5 seconds */
@@ -76,7 +76,7 @@ html, body, svg {
 
 #start_button{
     visibility: visible;
-    font-size: 6rem;
+    font-size: 3rem;
     position: absolute;
     left: 50%;
     top: 50%;

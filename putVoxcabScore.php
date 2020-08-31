@@ -27,18 +27,27 @@ switch ($_POST['num_perfect']) {
 }
 
 if ($delete) {
-    $sql = "DELETE from panscopic.tbl_student_voxcab where id=" . $_POST['id'];
+    $sql = "DELETE from panscopic.tbl_student_voxcab where id=" . $_POST['testid'];
 } else {
     $sql = "UPDATE panscopic.tbl_student_voxcab set score=" . $_POST['score'] . ", start_date = ADDTIME(NOW(), '" . $interval . "'),
         end_date = DATE_ADD(NOW(), INTERVAL 3 month), num_perfect = " . $_POST['num_perfect'] . ", time=" . $_POST['time'] . "
         where id=" . $_POST['testid'];
 }
-echo $sql;
+//echo $sql;
 
 $query = mysqli_query($conn, $sql);
 
 if (mysqli_affected_rows($conn) > 0) {
-    echo('success');
+
+    if($delete){
+        echo "delete";
+    } else{
+        $sql = "select start_date from panscopic.tbl_student_voxcab where id = " . $_POST['testid'];
+        $query = mysqli_query($conn, $sql);
+        $value = $query->fetch_object();
+        $datetime = new DateTime($value->start_date);
+        echo $datetime->format(DateTime::ATOM); // Updated ISO8601
+    }
 } else {
     echo('fail');
 }

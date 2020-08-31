@@ -14,8 +14,18 @@ var numWords = 0;
 
 
 function populateWordlist(type) { //
+
+    if(document.getElementById("container").firstElementChild === null){
+        // document.getElementById("start_button").className = "hide";
+        document.getElementById("start_button").innerText = "시험이 없습니다!\n잘 시세요";
+        setTimeout(function () {
+            window.history.back();
+        }, 2000);
+        return;
+    }
+
+
     var mySVGString = document.getElementById("container").firstElementChild.innerHTML;
-    console.log(mySVGString);
     var patt = /playSprite\('(.*?)'/g;
     if (type == "test") {
         patt = /check\('(.*?)'/g;
@@ -27,9 +37,6 @@ function populateWordlist(type) { //
     });
     wordlist = Array.from(new Set(wordlist)); // Set in ECMA6 removes duplicates
     numWords = wordlist.length;
-    wordlist.forEach(function (item) {
-        console.log(item);
-    });
 }
 
 function playSprite(name) {
@@ -37,10 +44,8 @@ function playSprite(name) {
     document.getElementById("bob").src = bob;
     document.getElementById("bob").play();
     let idx = wordlist.findIndex(function (value, index) {
-        // console.log(value);
         return value === name;
     });
-    console.log(idx);
     if (idx > -1) {
         wordlist.splice(idx, 1);
     }
@@ -65,13 +70,8 @@ function doNext() {
     printInfo();
     currentItemName = wordlist[currentIndex];
     if (currentIndex == wordlist.length) {
-
         const myScore = Math.floor((score / tries) * 100);
-
-        alert('the end\nYour score is: ' + myScore + '%');
-
         putScore(myScore);
-
     }
     playSprite(wordlist[currentIndex]);
 }
@@ -80,11 +80,18 @@ function putScore(score) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            alert(xhttp.responseText);
+            if(xhttp.responseText === "delete"){
+                msg = "Your 5th perfect score! You will never see this test again!!!";
+            } else{
+                const myDate = new Date(xhttp.responseText);
+                myDate.setMinutes(myDate.getMinutes() - myDate.getTimezoneOffset());
+                msg = "You can take this test again on \n" + myDate.toDateString() + "\nat " + myDate.getHours() + "시 " + myDate.getMinutes() + "분";
+            }
+            alert(msg);
+            showTestToast(score);
         }
     };
     const url = "http://notborder.org/scopic/putVoxcabScore.php";
-    alert(url);
     xhttp.open("POST", url, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("score=" + score + "&testid=" + document.getElementById("id").value +
@@ -127,6 +134,32 @@ function setTimer() {
     }
 }
 
+function showTestToast(score){
+    console.log("in show toast");
+    var testToast = document.getElementById("testSnackbar");
+    let toastClone = testToast.cloneNode(true);
+    document.getElementById("container").appendChild(toastClone);
+    toastClone.innerText = "Your score is " + score + "%";
+
+    if(score == 100){
+        toastClone.innerText = "Your score is " + score + "%\n" + " Perfect!";
+        const bob = "audio/perfect.mp3";
+        document.getElementById("bob").src = bob;
+        document.getElementById("bob").play();
+    }
+    toastClone.className= "toast show";
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function () {
+        toastClone.className = toastClone.className.replace("show", "");
+    }, 3000);
+
+    // And go back to the previous page
+    setTimeout(function () {
+        window.history.back();
+    }, 4000);
+}
+
 function showToast() {
     // Get the snackbar DIV
     var x = document.getElementById("snackbar");
@@ -149,45 +182,10 @@ function showToast() {
         }, 4000);
         //populateWordlist();
     }
-    toastClone.className = "show";
+    toastClone.className = "toast show";
 
     // After 3 seconds, remove the show class from DIV
     setTimeout(function () {
         toastClone.className = toastClone.className.replace("show", "");
     }, 3000);
 }
-
-
-//
-// function doNext() {
-//     currentItemName = wordlist[currentIndex];
-//     console.log(currentIndex + ": " + currentItemName);
-//     if (currentIndex == wordlist.length) {
-//         alert('the end');
-//     }
-//     playSprite(wordlist[currentIndex]);
-// }
-//
-// function check(name) {
-//     console.log('in check');
-//     if (name == currentItemName) {
-//         playSprite(soundsYes[Math.floor(Math.random() * soundsYes.length)]);
-//         currentIndex++;
-//         setTimeout(doNext, 1500);
-//
-//     } else {
-//         playSprite(soundsNo[Math.floor(Math.random() * soundsNo.length)]);
-//         setTimeout(function () {
-//             playSprite(currentItemName);
-//         }, 1500);
-//     }
-// }
-//
-// function setTimer() {
-//     clearInterval(hurrytimer);
-//     hurrytimer = setInterval(hurry, 9000);
-//
-//     function hurry() {
-//         playSprite('comeon');
-//     }
-// }
