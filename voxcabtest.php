@@ -11,14 +11,13 @@ ORDER BY tbl_student_voxcab.start_date LIMIT 1;";
 $query = mysqli_query($conn, $sql);
 
 list($imgName, $svgData, $voiceId, $id, $startDate, $endDate, $score, $time, $numPerfect) = mysqli_fetch_row($query);
-
 ?>
 
 <link rel="stylesheet" href="css/voxcab.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vocab Trainer</title>
-<script src="js/voxcab.js"></script>
+<script src="js/voxcab.js?version=1"></script>
 </head>
 <script>
     window.onload = function () {

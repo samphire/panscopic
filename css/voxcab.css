@@ -37,7 +37,7 @@ html, body, svg {
 }
 
 @media only screen and (orientation: landscape) {
-
+/*TODO: set up navigation looking smart in landscape*/
     #container {
         width: 100vw;
         height: 100vh;

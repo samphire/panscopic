@@ -2,9 +2,9 @@ var courseid, coursedesc, studentid, password;
 var ajax;
 if (typeof Storage !== "undefined") {
     //Below line has to be set when testing and so on...
-    if (screen.width > 767) {
-        localStorage.removeItem("user");
-    }
+    // if (screen.width > 767) {
+        localStorage.removeItem("user"); // ALWAYS REMOVE USER TEMPORARILY...
+    // }
     if (localStorage.getItem("user")) {
         courseid = localStorage.getItem("course");
         coursedesc = localStorage.getItem("coursedesc");

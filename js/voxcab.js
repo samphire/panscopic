@@ -17,31 +17,52 @@ function populateWordlist(type) { //
 
     if(document.getElementById("container").firstElementChild === null){
         // document.getElementById("start_button").className = "hide";
-        document.getElementById("start_button").innerText = "시험이 없습니다!\n잘 시세요";
-        setTimeout(function () {
-            window.history.back();
-        }, 2000);
+        document.getElementById("start_button").innerText = "시험이 없습니다!\n잘 쉬세요";
+        // setTimeout(function () {
+        //     window.history.back();
+        // }, 2000);
         return;
     }
 
 
+
     var mySVGString = document.getElementById("container").firstElementChild.innerHTML;
     var patt = /playSprite\('(.*?)'/g;
-    if (type == "test") {
+    if (type === "test") {
         patt = /check\('(.*?)'/g;
     }
     var result = mySVGString.match(patt);
     result.forEach(function (item) {
-        wordlist.push((type == "test" ? item.substring(7, item.length - 1) : item.substring(12, item.length - 1)));
+        wordlist.push((type === "test" ? item.substring(7, item.length - 1) : item.substring(12, item.length - 1)));
         console.log("pushing " + item);
     });
     wordlist = Array.from(new Set(wordlist)); // Set in ECMA6 removes duplicates
+    wordlist = shuffle(wordlist);
+    console.log("shuffled wordlist");
     numWords = wordlist.length;
 }
 
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
+
 function playSprite(name) {
-    const bob = "audio/" + name + ".wav";
-    document.getElementById("bob").src = bob;
+    document.getElementById("bob").src = "audio/" + name + ".wav";
     document.getElementById("bob").play();
     let idx = wordlist.findIndex(function (value, index) {
         return value === name;
@@ -69,7 +90,7 @@ function doNext() {
     document.getElementById("start_button").className = "hide";
     printInfo();
     currentItemName = wordlist[currentIndex];
-    if (currentIndex == wordlist.length) {
+    if (currentIndex === wordlist.length) {
         const myScore = Math.floor((score / tries) * 100);
         putScore(myScore);
     }
@@ -79,7 +100,7 @@ function doNext() {
 function putScore(score) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
+        if (this.readyState === 4 && this.status === 200) {
             if(xhttp.responseText === "delete"){
                 msg = "Your 5th perfect score! You will never see this test again!!!";
             } else{
@@ -87,7 +108,7 @@ function putScore(score) {
                 myDate.setMinutes(myDate.getMinutes() - myDate.getTimezoneOffset());
                 msg = "You can take this test again on \n" + myDate.toDateString() + "\nat " + myDate.getHours() + "시 " + myDate.getMinutes() + "분";
             }
-            alert(msg);
+            // alert(msg);  TODO: reapply this later
             showTestToast(score);
         }
     };
@@ -103,7 +124,7 @@ function putScore(score) {
 
 function check(name) {
     tries += 1;
-    if (name == currentItemName) {
+    if (name === currentItemName) {
         playSprite(soundsYes[Math.floor(Math.random() * soundsYes.length)]);
         score += 1;
         // currentIndex++;
@@ -141,10 +162,9 @@ function showTestToast(score){
     document.getElementById("container").appendChild(toastClone);
     toastClone.innerText = "Your score is " + score + "%";
 
-    if(score == 100){
+    if(score === 100){
         toastClone.innerText = "Your score is " + score + "%\n" + " Perfect!";
-        const bob = "audio/perfect.mp3";
-        document.getElementById("bob").src = bob;
+        document.getElementById("bob").src = "audio/perfect.mp3";
         document.getElementById("bob").play();
     }
     toastClone.className= "toast show";

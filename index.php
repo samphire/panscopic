@@ -20,7 +20,7 @@ $query = mysqli_query($conn, $sql);
 
     #setCourse, #setPass, #enterPass, #setStudent {
         top: 30%;
-        left: 0%;
+        left: 0;
         position: absolute;
         width: 90%;
         text-align: center;
@@ -79,12 +79,12 @@ $query = mysqli_query($conn, $sql);
         clear: both;
     }
 </style>
-<script src="js/index.js?version=11"></script>
+<script src="js/index.js?version=12"></script>
 </head>
 
 <body>
 <header style="text-align: center;">
-    <img src="img/bitmap.png" width="200px">
+    <img src="img/bitmap.png" id="logo">
 </header>
 <div id="setCourse" class="on">
     <div class="inner">

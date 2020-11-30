@@ -63,8 +63,12 @@ include("pageheader.inc");
 <?php
 print "<div id='greeting'>Hello " . $_SESSION['studname'] . "<br>What would you like to do?</div>";
 ?>
-<div class="testChoice">Watch a video</div>
+<!--<div class="testChoice">Watch a video</div>-->
 <div class="testChoice" onclick="window.location='voxcab.php'">Learn some words</div>
 <div class="testChoice" onclick="window.location='earnpoints.php'">Earn some points</div>
+<div class="testChoice" onclick="window.location='math/index.html'">Do some math</div>
 <footer>&copysr; Alex English 2020</footer>
+<script>
+    console.log("user: " + localStorage.getItem('user'));
+</script>
 </body></html>
