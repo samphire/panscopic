@@ -129,6 +129,10 @@ function setLocalStorage() {
 }
 
 function verifyPassword(myInput) {
+
+    studentid = document.querySelector("#student").value;
+    // studentid = document.getElementById("student").value;
+    console.info(studentid);
     var url = "verify.php?user=" + studentid + "&password=" + myInput.value;
     console.log("verifyPassword function called\n" + url);
     var responseText = ajaxCall("GET", url, false);

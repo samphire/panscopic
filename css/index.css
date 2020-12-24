@@ -1,0 +1,65 @@
+body {
+    background-color: #ECDFCD;
+    font-size: x-large;
+    font-family: 'ubunturegular', Arial, sans-serif;
+}
+
+#enterPass, #setStudent {
+    left: 0;
+    width: 90%;
+    text-align: center;
+    padding: 1%;
+    margin: 10px auto;
+}
+
+label {
+    display: block;
+}
+
+.inner {
+    width: 70%;
+    margin: 0 auto;
+}
+
+input {
+    padding: 5px;
+    margin: 10px;
+}
+
+.on {
+    display: block;
+    float;
+    clear: both;
+}
+
+.off {
+    display: none;
+}
+
+option, select {
+    font-size: x-large;
+    margin-top: 1em;
+    color: greenyellow;
+    background-color: #333333;
+    padding: 0.2em;
+}
+
+.selectCourse {
+    border-radius: 5px;
+    /*background-color: #333333;*/
+    background-color: #54B77E;
+    padding: 2%;
+    width: 96%;
+    margin: 0 auto;
+    margin-top: 30px;
+    /*color: greenyellow;*/
+    color: darkblue;
+    cursor: pointer;
+}
+
+header:after {
+    content: " ";
+    display: block;
+    clear: both;
+}
+

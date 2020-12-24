@@ -5,8 +5,7 @@ include("pageheader.inc");
 // Fetch the page data
 $sql = "SELECT voxcabs.imgName, voxcabs.svgData, tbl_student_voxcab.voice_id, tbl_student_voxcab.id
 FROM tbl_student_voxcab INNER JOIN voxcabs ON (tbl_student_voxcab.voxcab_id = voxcabs.id) 
-WHERE tbl_student_voxcab.start_date<Now() AND tbl_student_voxcab.end_date>Now() AND tbl_student_voxcab.student_id='" . $_SESSION['studid'] . "' 
-ORDER BY tbl_student_voxcab.start_date LIMIT 1;";
+WHERE tbl_student_voxcab.id =".$_GET['voxy'];
 $query = mysqli_query($conn, $sql);
 
 list($imgName, $svgData, $voiceId, $id) = mysqli_fetch_row($query);
