@@ -18,19 +18,19 @@ include("pageheader.inc");
 
 <body>
 <header style="text-align: center;">
-    <img src="img/bitmap.png" id="logo">
+    <img src="img/saenalLogoCropped.png" id="logo">
 </header>
 
 <div id="setStudent" class="on">
     <div class="inner">
-        <label for="student">사용자</label>
+        <label for="student">Пользователь</label>
         <input type="text" id="student">
     </div>
 </div><!--end setStudent-->
 
 <div id="enterPass" class="on">
     <div class="inner">
-        <label for="realPass">암호</label>
+        <label for="realPass">пароль</label>
         <input type="password" id="realPass" onkeypress="handleEnter(event, this)" autofocus>
         <div id='spinner' class="sk-folding-cube" style="display:none;">
             <div class="sk-cube1 sk-cube"></div>

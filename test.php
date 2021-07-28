@@ -339,8 +339,6 @@ while (list($a, , $b, $c, $d, $e, $f, $m, $n, $g, $h, $i, $j, $k, $l) = mysqli_f
     $bob = htmlentities($e, ENT_QUOTES, 'UTF-8');
     $queshy[$counter]['txt4'] = htmlspecialchars_decode($bob, ENT_NOQUOTES);
 
-//    $queshy[$counter]['txt4'] = $e;
-
     $bob = htmlentities($f, ENT_QUOTES, 'UTF-8');
     $queshy[$counter]['txt5'] = htmlspecialchars_decode($bob, ENT_NOQUOTES);
 
@@ -352,7 +350,6 @@ while (list($a, , $b, $c, $d, $e, $f, $m, $n, $g, $h, $i, $j, $k, $l) = mysqli_f
 
     $bob = htmlentities($g, ENT_QUOTES, 'UTF-8');
     $queshy[$counter]['answer'] = htmlspecialchars_decode($bob, ENT_NOQUOTES);
-//    $queshy[$counter]['answer'] = $g;
     $queshy[$counter]['type'] = $h;
     $queshy[$counter]['rubrik'] = $i;
     $queshy[$counter]['image'] = $j;
@@ -449,7 +446,7 @@ foreach ($queshy as $val => $wow) {
             } else {
                 print "\n<span class='question'>\nQ" . $qnumdisplay . "</span>&nbsp;&nbsp;&nbsp;&nbsp;" . $queshy[$val]['txt1'];
             }
-
+            $izzy = "";
 //            $izzy = "\n<br><br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "a' value=" . chr(34) . $queshy[$val]['txt2'] . chr(34) . ($done ? ($queshy[$val]['txt2'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "a'>" . baitchtmlentities($queshy[$val]['txt2']) . "</label>";
 //            $izzy .= "\n<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "b' value=" . chr(34) . $queshy[$val]['txt3'] . chr(34) . ($done ? ($queshy[$val]['txt3'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "b'>" . baitchtmlentities($queshy[$val]['txt3']) . "</label>";
 
@@ -459,16 +456,16 @@ foreach ($queshy as $val => $wow) {
             } else {
                 $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "a' value=" . chr(34) . $queshy[$val]['txt2'] . chr(34) . ($done ? ($queshy[$val]['txt2'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "a'>" . baitchtmlentities($queshy[$val]['txt2']) . "</label>";
             }
-        
-        
+
+
             if ($queshy[$val]['txt3'][0] == '~') {
                 print "<script>var sound" . $queshy[$val]['qnum'] . "b = new Howl({ src: ['media/audio/" . $queshy[$val]['txt3'] . "'], preload: true});</script>";
                 $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "b' value=" . chr(34) . $queshy[$val]['txt3'] . chr(34) . ($done ? ($queshy[$val]['txt3'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<img class='audioBtn' src='img/audioplay.png' onclick='sound" . $queshy[$val]['qnum'] . "b.stop();sound" . $queshy[$val]['qnum'] . "b.play();'>";
             } else {
                 $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "b' value=" . chr(34) . $queshy[$val]['txt3'] . chr(34) . ($done ? ($queshy[$val]['txt3'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "b'>" . baitchtmlentities($queshy[$val]['txt3']) . "</label>";
             }
-        
-        
+
+
             if ($queshy[$val]['txt4'] <> "") {
 //                $izzy .= "<br>\n<input type='radio' name='response" . $queshy[$val]['qnum'] . "' id='" . $queshy[$val]['qnum'] . "c' value=" . chr(34) . $queshy[$val]['txt4'] . chr(34) . ($done ? ($queshy[$val]['txt4'] == $queshy[$val]['answer'] ? " checked style='box-shadow: 2px 2px 2px red'" : "") : "") . " />&nbsp;&nbsp;<label for='" . $queshy[$val]['qnum'] . "c'>" . baitchtmlentities($queshy[$val]['txt4']) . "</label>";
                 if ($queshy[$val]['txt4'][0] == '~') {
@@ -634,6 +631,40 @@ if (!$done) {
 if ($_SESSION['oneshot'] == -1 && $_SESSION['ppraccy'] == -1) {
     print"\n<hr /><strong>연습만?</strong>  <input type='checkbox' name='praccy' align='left'>";
 }
+
+if ($_SESSION['oneshot'] == -1 && $_SESSION['ppraccy'] <> -1) {
+    print "
+<script>
+    var inputs;
+    window.onload = () => {
+        inputs = document.querySelectorAll(\"input\");
+        for (let myInput of inputs) {
+            myInput.addEventListener('click', checkAllAnswered);
+        }
+        document.getElementById(\"sendbutton\").hidden = true;
+    }
+
+    function checkAllAnswered() {
+        let clicked = 0;
+        let isAllDone = false;
+        let numq = " . $_SESSION['numq'] . ";
+        for (let radio of inputs) {
+            if (radio.checked) {
+                clicked++;
+            }
+        }
+        console.log(\"in checkAllAnswered. Clicked = \" + clicked);
+        if (clicked === numq) {
+            isAllDone = true;
+        }
+        if (isAllDone) {
+            document.getElementById(\"sendbutton\").hidden = false;
+        }
+    }
+</script>
+";
+}
+
 if ($_SESSION['studid'] == "147") {
     print("\n<label for='prof'>delete all results?</label>");
     print("\n<input id='prof' type='checkbox' name='prof'>");

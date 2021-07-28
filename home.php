@@ -90,7 +90,7 @@ function convert_datetime($str)
 print   "\n</head>\n<body>";?>
 
 <header style="text-align: center;">
-    <img src="img/bitmap.png" width="200px">
+    <img src="img/saenalLogoCropped.png" width="200px">
 </header>
 <?php
 print "\n<img id='reset' src='img/unlock.png' style='position: fixed;top: 0px; left: 0px;width: 48px; height: 48px;'>";

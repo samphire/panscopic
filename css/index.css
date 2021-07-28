@@ -1,3 +1,8 @@
+#logo{
+    margin-top: 20px;
+    width: 200px;
+}
+
 body {
     background-color: #ECDFCD;
     font-size: x-large;
@@ -28,7 +33,6 @@ input {
 
 .on {
     display: block;
-    float;
     clear: both;
 }
 
@@ -63,3 +67,9 @@ header:after {
     clear: both;
 }
 
+@media only screen and (max-width: 600px){
+    #logo{
+        width: 100px;
+        margin-top: 20px;
+    }
+}
