@@ -15,46 +15,79 @@ function convert_datetime($str)
     <style>
         body {
             background-color: #ECDFCD;
-            font-size: x-large;
             font-family: 'ubunturegular', Arial, sans-serif;
+            color: #fdca32;
+            width: 60%;
+            margin: 0 auto;
+        }
+#logo{
+    width: 14%;
+    margin-top: 20px;
+    animation: spin 40s linear infinite;
+}
+@keyframes spin {
+    100%{transform: rotate(360deg);}
+}
+        #userinfo {
+            background-image: url("avatars/<?php echo $_SESSION['studid']; ?>.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 140px;
+            color: black;
+        }
+
+
+        #studname {
+            font-size: x-large;
+            text-align: center;
+        }
+#dummy{
+    margin-top: 105%;
+}
+        #btnAnalysis {
+            font-size: large;
+            padding: 5px 20px;
+            background-color: white;
+            color: #191918;
+            border: 2px solid #eb546e;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         #stars {
-            width: 90%;
+            /*width: 90%;*/
             margin: 0 auto;
-            border: 1px solid black;
+            /*border: 1px solid black;*/
             border-radius: 5px;
-            background-color: #54B77E;
+            /*background-color: #54B77E;*/
+            background-color: #00adb8;
             padding: 2%;
             text-align: center;
-        }
-
-        .stardiv {
-            margin: auto;
-            float: left;
-            width: 20%;
+            font-weight: bold;
         }
 
         .header {
             text-align: center;
+            width: 60%;
         }
 
         .testChoice {
             border-radius: 5px;
-            /*background-color: #333333;*/
-            background-color: #6AD9D9;
+            background-color: #94c11f;
             padding: 2%;
-            width: 90%;
+            /*width: 90%;*/
             margin: 0 auto;
             margin-top: 30px;
-            /*color: greenyellow;*/
-            color: black;
+            color: #191918;
             cursor: pointer;
         }
 
         .done {
-            background-color: sandybrown;
-            color: black;
+            background-color: #494948;
+            color: #fdca32;
         }
 
         .perc {
@@ -65,6 +98,28 @@ function convert_datetime($str)
         #reset {
             position: absolute;
         }
+        @media only screen and (max-width: 600px){
+            /*Big smartphones [426px -> 600px]*/
+            body{
+                width: 94%;
+            }
+            #userinfo {
+                top: 10px;
+                right: 10px;
+                /*width: 140px;*/
+                color: black;
+                width: 20%;
+            }
+            #studname {
+                font-size: large;
+                text-align: center;
+            }
+            #logo{
+                width: 30%;
+                margin-top: 10px;
+            }
+        }
+
     </style>
 
     <script type="text/javascript">
@@ -121,7 +176,7 @@ function convert_datetime($str)
                 console.log("Analysis: \r\n");
                 let msg = '';
 
-                for (bob of myArr) {
+                for (let bob of myArr) {
                     msg += (bob[0] === null ? 'zero' : bob[0]) + (bob[0] === '1' ? " correct answer:     " : " correct answers:   ") + bob[1] + "\r\n";
                 }
                 console.log(msg);
@@ -133,8 +188,9 @@ function convert_datetime($str)
 <?php
 print   "\n</head>\n<body>"; ?>
 
-    <header style="text-align: center;">
-        <img src="img/saenalLogoCropped.png" width="200px">
+    <header style="text-align: center; position: relative;">
+        <img id='logo' src="img/saenalLogoCropped.png">
+        <div id='userinfo'><div id='dummy'></div><div id='studname'><?php echo $_SESSION['studname']; ?></div></div>
     </header>
 <?php
 print "\n<img id='reset' src='img/unlock.png' style='position: fixed;top: 0px; left: 0px;width: 48px; height: 48px;'>";
@@ -223,7 +279,7 @@ ORDER BY bob.fld_test_id";
             array_push($tests, $test);
 
             if ($score == 100) {
-                print "\n<div class=\"stardiv\" style=\"width: $width%;font-size: " . $starSize . "em;\">&#x2605;<div style=\"font-size: 1rem;\">$testdesc
+                print "\n<div class=\"stardiv\" style=\"width: $width%; font-size: " . $starSize . "em;\">&#x2605;<div style=\"font-size: 1rem;\">$testdesc
             <br>최소: " . $min . "%
             <br>최대: " . $max . "%
             <br>평균: " . $avg . "%
@@ -231,13 +287,13 @@ ORDER BY bob.fld_test_id";
             <br>순위: " . $rank . "
             </div></div>";
             } else {
-                print"\n<div class=\"stardiv\" style=\"width: $width%;font-size: " . $starSize . "em;\">&#x2606;<div style=\"font-size: 1rem;\">$testdesc
+                print"\n<div class=\"stardiv\" style=\"width: $width%; font-size: " . $starSize . "em;\">&#x2606;<div style=\"font-size: 1rem;\">$testdesc
             <br>최소: " . $min . "%
             <br>최대: " . $max . "%
             <br>평균: " . $avg . "%
             <br>수: " . $count . "
             <br>순위: " . $rank . "
-            <br><br><button onclick='getQuestionAnalysis(" . $testid . ")'>Get Analysis</button>
+            <br><br><button id='btnAnalysis' onclick='getQuestionAnalysis(" . $testid . ")'>분석</button>
             </div></div>";
             }
         }
@@ -253,12 +309,12 @@ ORDER BY bob.fld_test_id";
 
         if ((($val[2] < 100) && $val[5] == -1) || $val[2] === NULL) {
             if ($val[2] > 0) {
-                echo "<div class='testChoice' onclick='doTest($val[0]);'> $val[1] <div class='perc'>$val[2]%</div></div>";
+                echo "<div class='testChoice' onclick='doTest($val[0])'> $val[1] <div class='perc'>$val[2]%</div></div>";
             } else {
-                echo "<div class='testChoice' onclick='doTest($val[0]);'> $val[1] <div class='perc'></div></div>";
+                echo "<div class='testChoice' onclick='doTest($val[0])'> $val[1] <div class='perc'></div></div>";
             }
         } else {
-            echo "<div class='testChoice done' onclick='doTest($val[0]);'> $val[1]&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;COMPLETE&nbsp;&nbsp;$val[2]%</div>";
+            echo "<div class='testChoice done' onclick='doTest($val[0])'> $val[1]&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;COMPLETE&nbsp;&nbsp;$val[2]%</div>";
         }
     }
 
