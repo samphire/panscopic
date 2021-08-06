@@ -281,15 +281,19 @@ print "\n\n<script type='text/javascript'>
 print "\n</head>\n<body>";
 
 //get Questions
-if ($_SESSION['retain'] == -1) {
+if ($_SESSION['oneshot'] == 0) {
+    // find out if the student has already attempted the test - $data
     $sql = "SELECT * FROM tbl_response" . $_SESSION['qnstable'] . " WHERE fld_student_id='" . $_SESSION['studid'] . "'";
+//    echo $sql;
+//    echo "\n\n\r\n<br><br>";
     $query = mysqli_query($conn, $sql);
     $data = mysqli_fetch_array($query);
 
-    if ($data) {
+    if ($data && $_SESSION['retain'] == -1) {
+        // get wrongly answered questions
         $sql = "SELECT * FROM tbl_qns" . $_SESSION['qnstable'] . " INNER JOIN tbl_response" . $_SESSION['qnstable'] . " ON tbl_qns" . $_SESSION['qnstable'] . ".fld_qnum = tbl_response" . $_SESSION['qnstable'] . ".fld_question_id
         WHERE tbl_response" . $_SESSION['qnstable'] . ".fld_response<> BINARY tbl_qns" . $_SESSION['qnstable'] . ".fld_answer AND tbl_response" . $_SESSION['qnstable'] . ".fld_student_id='" . $_SESSION['studid'] . "' ORDER BY tbl_qns" . $_SESSION['qnstable'] . ".fld_qnum";
-        //echo $sql;
+//        echo $sql;
         $query = mysqli_query($conn, $sql);
         $numrows = mysqli_num_rows($query);
         if ($numrows < 1) {
@@ -298,7 +302,7 @@ if ($_SESSION['retain'] == -1) {
             $query = mysqli_query($conn, $sql);
             $done = true;
         }
-    } else {
+    } else { //print all the questions
         $sql = "SELECT * from tbl_qns" . $_SESSION['qnstable'];
         $query = mysqli_query($conn, $sql);
     }
@@ -625,7 +629,7 @@ if (!$done) {
     print("<input type='hidden' name='testid' value='" . $_SESSION['testid'] . "'>");
     print("<input type='hidden' name='retain' value='" . $_SESSION['retain'] . "'>");
 
-    print "\n\n <input type = 'submit' name = 'submit' id = 'sendbutton' value = \"보내기 &#x27a4;\">";
+    print "\n\n <input type = 'submit' name = 'submit' id = 'sendbutton' value = \"подчинение &#x27a4;\">";
 }
 
 if ($_SESSION['oneshot'] == -1 && $_SESSION['ppraccy'] == -1) {

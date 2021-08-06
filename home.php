@@ -208,8 +208,8 @@ $query = mysqli_query($conn, $sql);
 
 while (list($stud, $class, , $classdesc) = mysqli_fetch_row($query)) {
 //Get actual scores for this student
-    $sql = "SELECT bob.fld_test_id, bob.fld_desc, bob.fld_retain, bob.fld_startdate, bob.fld_enddate, susan.fld_score
-FROM (SELECT tbl_tests.fld_test_id, tbl_tests.fld_desc, tbl_tests.fld_retain,tbl_class_tests.fld_startdate, tbl_class_tests.fld_enddate
+    $sql = "SELECT bob.fld_test_id, bob.fld_desc, bob.fld_oneshot, bob.fld_startdate, bob.fld_enddate, susan.fld_score
+FROM (SELECT tbl_tests.fld_test_id, tbl_tests.fld_desc, tbl_tests.fld_oneshot,tbl_class_tests.fld_startdate, tbl_class_tests.fld_enddate
 FROM (tbl_classes INNER JOIN tbl_class_tests ON tbl_classes.fld_class_id = tbl_class_tests.fld_classid)
 INNER JOIN tbl_tests ON tbl_class_tests.fld_test_id = tbl_tests.fld_test_id
 WHERE tbl_class_tests.fld_classid=" . $class . ") AS bob
@@ -307,14 +307,14 @@ ORDER BY bob.fld_test_id";
             continue;
         }
 
-        if ((($val[2] < 100) && $val[5] == -1) || $val[2] === NULL) {
+        if ((($val[2] < 100) && $val[5] == 0) || $val[2] === NULL) { //why is 'retain' being used for oneshot?
             if ($val[2] > 0) {
                 echo "<div class='testChoice' onclick='doTest($val[0])'> $val[1] <div class='perc'>$val[2]%</div></div>";
             } else {
                 echo "<div class='testChoice' onclick='doTest($val[0])'> $val[1] <div class='perc'></div></div>";
             }
         } else {
-            echo "<div class='testChoice done' onclick='doTest($val[0])'> $val[1]&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;COMPLETE&nbsp;&nbsp;$val[2]%</div>";
+            echo "<div class='testChoice done' onclick='doTest($val[0])'> $val[1]&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;законченный&nbsp;&nbsp;$val[2]%</div>";
         }
     }
 
