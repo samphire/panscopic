@@ -20,14 +20,19 @@ function convert_datetime($str)
             width: 60%;
             margin: 0 auto;
         }
-#logo{
-    width: 14%;
-    margin-top: 20px;
-    animation: spin 40s linear infinite;
-}
-@keyframes spin {
-    100%{transform: rotate(360deg);}
-}
+
+        #logo {
+            width: 14%;
+            margin-top: 20px;
+            animation: spin 40s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         #userinfo {
             background-image: url("avatars/<?php echo $_SESSION['studid']; ?>.png");
             background-size: contain;
@@ -39,14 +44,15 @@ function convert_datetime($str)
             color: black;
         }
 
-
         #studname {
             font-size: x-large;
             text-align: center;
         }
-#dummy{
-    margin-top: 105%;
-}
+
+        #dummy {
+            margin-top: 105%;
+        }
+
         #btnAnalysis {
             font-size: large;
             padding: 5px 20px;
@@ -98,11 +104,13 @@ function convert_datetime($str)
         #reset {
             position: absolute;
         }
-        @media only screen and (max-width: 600px){
+
+        @media only screen and (max-width: 600px) {
             /*Big smartphones [426px -> 600px]*/
-            body{
+            body {
                 width: 94%;
             }
+
             #userinfo {
                 top: 10px;
                 right: 10px;
@@ -110,11 +118,13 @@ function convert_datetime($str)
                 color: black;
                 width: 20%;
             }
+
             #studname {
                 font-size: large;
                 text-align: center;
             }
-            #logo{
+
+            #logo {
                 width: 30%;
                 margin-top: 10px;
             }
@@ -190,7 +200,10 @@ print   "\n</head>\n<body>"; ?>
 
     <header style="text-align: center; position: relative;">
         <img id='logo' src="img/saenalLogoCropped.png">
-        <div id='userinfo'><div id='dummy'></div><div id='studname'><?php echo $_SESSION['studname']; ?></div></div>
+        <div id='userinfo'>
+            <div id='dummy'></div>
+            <div id='studname'><?php echo $_SESSION['studname']; ?></div>
+        </div>
     </header>
 <?php
 print "\n<img id='reset' src='img/unlock.png' style='position: fixed;top: 0px; left: 0px;width: 48px; height: 48px;'>";
@@ -278,24 +291,10 @@ ORDER BY bob.fld_test_id";
 
             array_push($tests, $test);
 
-            if ($score == 100) {
-                print "\n<div class=\"stardiv\" style=\"width: $width%; font-size: " . $starSize . "em;\">&#x2605;<div style=\"font-size: 1rem;\">$testdesc
-            <br>최소: " . $min . "%
-            <br>최대: " . $max . "%
-            <br>평균: " . $avg . "%
-            <br>수: " . $count . "
-            <br>순위: " . $rank . "
+
+            print "\n<div class=\"stardiv\" style=\"display: inline; float: left; width: {$width}%; font-size: {$starSize}em;\">" . ($score == 100 ? "&#x2605;" : "&#x2606;") . "<div style=\"font-size: 1rem;\">$testdesc
+            <br> 최소: {$min}%<br>최대: {$max}%<br>평균: {$avg}%<br>수: {$count}<br>순위: {$rank}<br><br><button id='btnAnalysis' onclick='getQuestionAnalysis({$testid})'>분석</button>
             </div></div>";
-            } else {
-                print"\n<div class=\"stardiv\" style=\"width: $width%; font-size: " . $starSize . "em;\">&#x2606;<div style=\"font-size: 1rem;\">$testdesc
-            <br>최소: " . $min . "%
-            <br>최대: " . $max . "%
-            <br>평균: " . $avg . "%
-            <br>수: " . $count . "
-            <br>순위: " . $rank . "
-            <br><br><button id='btnAnalysis' onclick='getQuestionAnalysis(" . $testid . ")'>분석</button>
-            </div></div>";
-            }
         }
     }
     print "\n<div style=\"clear: both\"></div>\n</div>";

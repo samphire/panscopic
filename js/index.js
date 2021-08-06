@@ -1,9 +1,13 @@
 var courseid, coursedesc, studentid, password;
 var ajax;
+
+console.log("running index.js");
+
 if (typeof Storage !== "undefined") {
+    console.log("local storage is not undefined");
     //Below line has to be set when testing and so on...
     // if (screen.width > 767) {
-        localStorage.removeItem("user"); // ALWAYS REMOVE USER TEMPORARILY...
+    //     localStorage.removeItem("user"); // ALWAYS REMOVE USER TEMPORARILY...
     // }
     if (localStorage.getItem("user")) {
         courseid = localStorage.getItem("course");
@@ -33,8 +37,8 @@ function headForHome() {
     //set session variables in ajax
     var resp = ajaxCall("GET", "login.php?courseid=" + courseid + "&coursedesc=" + coursedesc + "&studentid=" + studentid, false);
     console.log(resp);
-    // window.location = "home.php";
-    window.location = "welcome.php";
+    window.location = "home.php";
+    //window.location = "welcome.php"; // new screen for Alex
 }
 
 function handleEnter(e) {
