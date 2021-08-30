@@ -203,8 +203,8 @@ include("pageheader.inc");
         var context = new AudioContext();
         var btn;
         window.onload = function () {
-            console.log("in window.onload");
-            if(context.state !=="running"){
+            console.log("in window.onload and audio context is " + context.state);
+            if (context.state !== "running") {
                 btn = document.createElement("BUTTON");
                 btn.innerHTML = "Start Audio";
                 btn.style = "background: linear-gradient(0deg, #FF5A00, #FFAE00); position: fixed; top: 10px; margin: 0 auto; font-size: xx-large; height: 60px;";
@@ -227,6 +227,17 @@ include("pageheader.inc");
                         });
                     }
                 });
+            } else {
+                // Make Howls
+                console.log("making howls");
+                const howlNodeList = document.querySelectorAll('[data-howl-name]');
+                console.log("There are " + howlNodeList.length + " howls");
+                for (myEl of howlNodeList) {
+                    const name = myEl.getAttribute('data-howl-name');
+                    let file = myEl.getAttribute('data-howl-file');
+                    console.log(name + ", " + file);
+                    eval("window." + name + " = new Howl({src: ['media/audio/" + file + "'], preload: true});");
+                }
             }
 
             var imgs = document.getElementsByClassName("dropshadow");

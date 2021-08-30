@@ -11,7 +11,7 @@ include("pageheader.inc");
 <link rel="stylesheet" href="css/spinner.css">
 <link rel="stylesheet" href="css/index.css">
 
-<script src="js/index.js?version=14"></script>
+<script src="js/index.js?version=15"></script>
 
 <script src="https://kit.fontawesome.com/c85b7f2375.js" crossorigin="anonymous"></script>
 </head>

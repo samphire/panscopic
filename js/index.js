@@ -33,6 +33,10 @@ function ajaxCall(method, url, sync) {
     return bob;
 }
 
+function goMath(){
+    window.location.assign("https://notborder.org/scopic/math");
+}
+
 function headForHome() {
     //set session variables in ajax
     var resp = ajaxCall("GET", "login.php?courseid=" + courseid + "&coursedesc=" + coursedesc + "&studentid=" + studentid, false);
@@ -126,10 +130,12 @@ function putPasswordToDb() {
 
 }
 function setLocalStorage() {
+    console.info("setting local storage: user, course, coursedesc, password");
     localStorage.setItem("user", studentid);
     localStorage.setItem("course", courseid);
     localStorage.setItem("coursedesc", coursedesc);
     localStorage.setItem("password", password);
+    console.info("user is " + localStorage.getItem("user"));
 }
 
 function verifyPassword(myInput) {

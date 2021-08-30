@@ -199,6 +199,7 @@ function convert_datetime($str)
 print   "\n</head>\n<body>"; ?>
 
     <header style="text-align: center; position: relative;">
+        <img id='einstein' src='images/einstein.png' style='position: absolute; width: 100px; left: 10px; top: 30px; cursor: pointer;' onclick='window.location.assign("math.html")'>
         <img id='logo' src="img/saenalLogoCropped.png">
         <div id='userinfo'>
             <div id='dummy'></div>
