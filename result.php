@@ -108,9 +108,10 @@ function callWrong($con)
     return $query;
 }
 
-function calcScore($query)
+//function calcScore($query)
+function calcScore($numWrong)
 {
-    $percent_score = round(($_POST['numq'] - mysqli_num_rows($query)) / $_POST['numq'] * 100);
+    $percent_score = round(($_POST['numq'] - $numWrong) / $_POST['numq'] * 100);
     return $percent_score;
 }
 
@@ -159,10 +160,10 @@ if ($_POST['retain'] == -1) {
         error_log("There is Data, so update\n".$_POST['studid'].": ".$sql, 0);
         mysqli_query($conn, $sql) or die("Error message is:  " . mysqli_error($conn));
 
-        //SELECT wrongly answered questions
-        $query = callWrong($conn);
+//        //SELECT wrongly answered questions
+//        $query = callWrong($conn);
         //CALCULATE score
-        $percent_score = calcScore($query);
+        $percent_score = calcScore(mysqli_num_rows($query));
         //UPDATE scores table
         $sql = "UPDATE tbl_stud_testscore SET fld_score = $percent_score WHERE fld_student_id='" . $_POST['studid'] . "' AND fld_test_id=" . $_POST['testid'];
         error_log("update scores table\n".$_POST['studid'].": ".$sql, 0);
@@ -182,7 +183,8 @@ if ($_POST['retain'] == -1) {
         //SELECT wrongly answered questions
         $query = callWrong($conn);
         //CALCULATE score
-        $percent_score = calcScore($query);
+//        $percent_score = calcScore($query);
+        $percent_score = calcScore(mysqli_num_rows($query));
         //INSERT scores table
         $sql = "INSERT INTO tbl_stud_testscore(fld_student_id, fld_test_id, fld_score) VALUES('" . $_POST['studid'] . "', " . $_POST['testid'] . ",$percent_score)";
         error_log("there was no previous data\n".$_POST['studid'].": ".$sql, 0);
@@ -211,13 +213,11 @@ if ($_POST['retain'] == -1) {
     error_log("insert to response table\n".$_POST['studid'].": ".$sql, 0);
     mysqli_query($conn, $sql) or die("damn!" . mysqli_error($conn) . "<br><br>" . $sql);
 
-
-
-
     //SELECT wrongly answered questions
     $query = callWrong($conn);
     //CALCULATE score
-    $percent_score = calcScore($query);
+//    $percent_score = calcScore($query);
+    $percent_score = calcScore(mysqli_num_rows($query));
     //INSERT scores table
     $sql = "insert into tbl_stud_testscore(fld_student_id, fld_test_id, fld_score) VALUES('" . $_POST['studid'] . "', '" . $_POST['testid'] . "',$percent_score)";
     error_log("inserting score\n".$_POST['studid'].": ".$sql, 0);

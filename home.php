@@ -11,6 +11,8 @@ function convert_datetime($str)
 
 }
 
+// TODO: when session has expired, send notice to user and go to login screen
+
 ?>
     <style>
         body {
