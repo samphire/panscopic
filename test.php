@@ -1,6 +1,8 @@
 <?php session_start();
 include("sessionheader.inc");
 include("pageheader.inc");
+
+
 // TODO: Make sure that images appear at the correct dimension, not overflowing the page
 ?>
     <style type="text/css">
