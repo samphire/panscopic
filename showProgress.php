@@ -6,7 +6,7 @@ header('Content-Type: text/plain');
 $myConn = mysqli_connect("localhost", "root", "Fk!i=a0@:K") or die('Error making custom mysqli connection' . mysqli_connect_error());
 $sql="drop table if exists panscopic.BOB";
 $result = mysqli_query($myConn, $sql) or die("1".mysqli_error($myConn));
-$sql="create temporary table panscopic.BOB SELECT id, name, round(cash_earned/60) AS MathPerc FROM panscopic.tbl_user join panscopic.tbl_stud_class on tbl_user.id = tbl_stud_class.fld_student_id where tbl_stud_class.fld_class_id=14;";
+$sql="create temporary table panscopic.BOB SELECT id, name, round(cash_earned/60) AS MathPerc FROM panscopic.tbl_user join panscopic.tbl_stud_class on tbl_user.id = tbl_stud_class.fld_student_id where tbl_stud_class.fld_class_id={$_GET['classid']};";
 $result = mysqli_query($myConn, $sql) or die("2".mysqli_error($myConn));
 $sql="drop table if exists panscopic.duck";
 $result = mysqli_query($myConn, $sql) or die("3".mysqli_error($myConn));
@@ -37,7 +37,7 @@ $sql="SELECT tommy.*, fld_class_id AS classid from
 (select  user_email AS id, name, numLearned, numLearning, avgRepnum, MathPerc, numLearned + round(numLearning * avgRepnum * 0.1) as wordscore from 
 panscopic.carvery left join (SELECT BOB.*, duck.goalwords  from panscopic.BOB left join panscopic.duck on BOB.id = duck.user_email) as wowbob on carvery.user_email = wowbob.id) as tommy
 join panscopic.tbl_stud_class on tommy.id=panscopic.tbl_stud_class.fld_student_id
-where fld_class_id=14 order by id;";
+where fld_class_id={$_GET['classid']} order by id;";
 $result = mysqli_query($myConn, $sql) or die("8".mysqli_error($myConn));
 
 $array = Array();
